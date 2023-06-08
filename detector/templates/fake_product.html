@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11"></script>
+
+<head>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <title>Imitation.io</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            max-width: 800px;
+            margin: auto;
+            padding: 10px;
+            background-color: #FAFAFA;
+            color: #333;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #212121;
+            font-weight: 700;
+        }
+        
+        input[type="text"],
+        input[type="file"] {
+            width: 100%;
+            padding: 15px 20px;
+            margin: 10px 0;
+            display: inline-block;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        button {
+            width: 100%;
+            background-color: #2962FF;
+            color: white;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+        }
+        
+        button:hover {
+            background-color: #0039CB;
+        }
+        
+        progress[value] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 25px;
+            border-radius: 5px;
+            overflow: hidden;
+            background-color: #ddd;
+        }
+        
+        progress[value]::-webkit-progress-bar {
+            background-color: #ddd;
+        }
+        
+        progress[value]::-webkit-progress-value {
+            background-color: #2962FF;
+            transition: width 0.3s ease;
+        }
+        
+        progress[value]::-moz-progress-bar {
+            background-color: #2962FF;
+        }
+        
+        #resultLabel {
+            font-size: 18px;
+            font-weight: 600;
+            color: #212121;
+            text-align: center;
+            margin-top: 10px;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .animated-input {
+            transition: all 0.5s;
+        }
+        
+        .animated-input:focus {
+            transform: translateY(-10px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .animated-button {
+            transition: all 0.5s;
+        }
+        
+        .animated-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        #animated-title {
+            height: 50px;
+            /* adjust based on your requirement */
+        }
+        #resultPoints {
+            list-style: none; /* Remove the default list style */
+            padding: 0; /* Remove the default padding */
+        }
+        
+        #resultPoints li {
+            font-size: 1.1em; /* Increase the font size */
+            margin: 1em 0; /* Add some space between the list items */
+            padding: 0.5em; /* Add some padding inside the list items */
+            background-color: #ffffff; /* Set a white background for the list items */
+            border-radius: 0.3em; /* Make the corners of the list items slightly rounded */
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Add a subtle shadow to the list items */
+            transition: all 0.3s ease; /* Smoothly animate any changes */
+            opacity: 0; /* Start with the list items being invisible */
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        #resultPoints li::before {
+            content: "✖"; /* This is the cross symbol */
+            color: #FF0000; /* Set a red color for the cross symbol */
+            margin-right: 0.5em; /* Add some space to the right of the check symbol */
+        }
+        
+        #resultPoints li.animate {
+            opacity: 1; /* Make the list items visible */
+            transform: translateX(0); /* Move the list items to their original position */
+        }      
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1 id="animated-title"></h1>
+    <div class="container">
+        <form id="product-form">
+            <label for="product-url">Product URL:</label>
+            <input type="text" id="product-url" name="product-url" autocomplete="off" class="form-control animated-input"><br>
+            <label for="product-image">Product Image:</label>
+            <input type="file" id="product-image" name="product-image" accept="image/*" class="form-control-file animated-input"><br>
+            <button type="submit" class="btn btn-custom btn-block animated-button">Check</button>
+        </form>
+        <progress id="resultProgress" max="100" value="0">0%</progress>
+        <span id="resultLabel"></span>
+        <ul id="resultPoints"></ul>
+    </div>
+
+    <script>
+        new Typed('#animated-title', {
+            strings: ["Welcome To Imitation", "Verify Your Product Using AI"],
+            typeSpeed: 70,
+            loop: false,
+            showCursor: false
+        });
+
+        function isValidURL(string) {
+            try {
+                new URL(string);
+            } catch (_) {
+                return false;
+            }
+            return true;
+        }
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function animateProgress(progressBar, resultLabel, targetValue) {
+            var currentValue = progressBar.value;
+            var interval = setInterval(function() {
+                if (currentValue >= targetValue) {
+                    clearInterval(interval);
+                } else {
+                    currentValue++;
+                    progressBar.value = currentValue;
+                    resultLabel.textContent = currentValue + '% likely to be fake';
+                }
+            }, 100); // the speed of the progress bar and text animation
+        }               
+        
+        document.getElementById('product-form').onsubmit = function(e) {
+            e.preventDefault();
+            var url = document.getElementById('product-url').value;
+            const data = {url: url};
+            var imageInput = document.getElementById('product-image');
+            var image = imageInput.files.length > 0 ? imageInput.files[0] : null;
+            if (!url && !image) {
+                alert('Please enter a URL or upload an image.');
+                return;
+            }
+            if (url && !isValidURL(url)) {
+                alert('Invalid URL');
+                return;
+            }
+            var formData = new FormData();
+            formData.append('url', url);
+            if (image !== null) {
+                formData.append('image', image);
+            }
+        
+            var csrftoken = getCookie('csrftoken');
+            var resultProgress = document.getElementById('resultProgress');
+            var resultLabel = document.getElementById('resultLabel');
+            resultProgress.value = 0;
+            resultLabel.textContent = "";
+            var resultPoints = document.getElementById('resultPoints');
+            resultPoints.innerHTML = "";  // clear any existing points
+        
+            fetch('http://0.0.0.0:8000/check-url/', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': csrftoken
+                }
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                // Update the progress bar and label with the result
+                animateProgress(resultProgress, resultLabel, data.result);
+                // Show the points contributing to fakeness
+                data.points.forEach((item, i) => {
+                    setTimeout(() => {
+                        var point = document.createElement("li");
+                        point.textContent = item;
+                        resultPoints.appendChild(point);
+                        setTimeout(() => {
+                            point.classList.add('animate');
+                        }, 100);
+                    }, i * 500);
+                });
+            }
+            ).catch((error) => console.error('Error:', error));            
+        };
+    </script>
+</body>
+
+</html>
